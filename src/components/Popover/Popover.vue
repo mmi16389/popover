@@ -122,7 +122,7 @@ export default class Popover extends MixinsDeclaration {
   top: -9px;
   z-index: 200;
   filter: drop-shadow(0px -1px 0px rgba(0, 0, 0, 0.3));
-  left: calc(90% - 10px);
+  left: calc(80% - 10px);
 }
 
 .vue-popover.dropdown-position-bottom:before,
