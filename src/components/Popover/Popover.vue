@@ -78,15 +78,14 @@ export default class Popover extends MixinsDeclaration {
          posTarget = document.getElementById(this.target)?.getBoundingClientRect();
          const el = document.getElementById('v-popover');
          if(el){
-           console.log(' hello the world ', posTarget);
            el.style.position = 'fixed';
            el.style.top= `${Number(posTarget?.height)+Number(posTarget?.top)+10}px`
          }
      });
 
-      window?.addEventListener("click", (e)=>{
+      window?.addEventListener("click", (e:any)=>{
         posTarget = document.getElementById(this.target)?.getBoundingClientRect();
-        if(e.target?.id === this.target){
+        if(e.target?.id === this.target || e.target?.offsetParent.parentElement.id === this.target){
            this.$nextTick(() => {
            let caclLeft = this.width - (Number(posTarget?.width));
             this.position = {

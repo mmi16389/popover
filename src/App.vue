@@ -24,13 +24,22 @@
       <v-spacer></v-spacer>
 
       <v-btn id="popover-1">
-             boooooooooooooooo
+            <span>show me the money1</span>
+      </v-btn>
+
+       <v-btn id="popover-2">
+            <span>show me the money2</span>
       </v-btn>
     </v-app-bar>
 
     <v-main>
       <HelloWorld />
-      <Popover :visible="menu" target="popover-1" width=500>
+       <Popover :visible="menu" target="popover-2" :width=150>
+         <template #body>
+           hello the world
+         </template>
+       </Popover>
+      <Popover :visible="menu" target="popover-1" :width=500>
         <template #body>
                   <v-card
       :loading="loading"

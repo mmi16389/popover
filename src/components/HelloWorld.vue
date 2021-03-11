@@ -85,6 +85,14 @@
           >
             {{ eco.text }}
           </a>
+           <v-btn id="popover-3">
+            <span>show me the money2</span>
+      </v-btn>
+           <Popover :visible="menu" target="popover-3" :width=150>
+         <template #body>
+           hello the world
+         </template>
+       </Popover>
         </v-row>
       </v-col>
     </v-row>
