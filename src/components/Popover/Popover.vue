@@ -1,14 +1,13 @@
 <template>
-  <transition :name="transition">
     <div
-      v-if="visible"
+      id="v-popover"
+      v-if="__visible"
       class="vue-popover dropdown-position-bottom"
-      :data-popover="this.name"
+      :style="style"
       @click.stop
     >
       <slot name="body" />
     </div>
-  </transition>
 </template>
 <script lang="ts">
 import Vue from "vue";
@@ -16,27 +15,91 @@ import Component, { mixins } from "vue-class-component";
 
 const Props = Vue.extend({
   props: {
-    name: {
-      type: String,
-      required: false,
+    target :{
+      type: String
     },
-    transition: {
-      type: String,
+    width: {
+      type: Number,
+      default: 120
+    },
+    pointer: {
+      type: Boolean,
+      default: true
     },
   },
 });
+
 const MixinsDeclaration = mixins(Props);
 
 @Component
 export default class Popover extends MixinsDeclaration {
-  /**
-   * Show popover or not
-   * Default value false, popover not showing
-   */
-  visible = true;
 
-  mounted(){
-   console.log(' Le resultat ');
+  get __visible():boolean{
+    return this.visible;
+  }
+
+  get style(){
+    const { width } = this
+       const styles:any = {
+        width: `${width}px`,
+        ...this.position
+      }
+      return styles
+    }
+
+  set __visible(visible: boolean){
+   this.visible = visible
+  }
+
+  position = {};
+
+  visible = false;
+
+
+  created():void{
+    this.calculPosition()
+  }
+
+
+  calculPosition(): void{
+
+    let posTarget = document.getElementById(this.target)?.getBoundingClientRect();
+
+     window.addEventListener("resize", (evt)=>{
+       posTarget = document.getElementById(this.target)?.getBoundingClientRect();
+       let caclLeft = this.width - (Number(posTarget?.width));
+       this.position = {
+            top: `${Number(posTarget?.top)-10}px`,
+            left: `${Number(posTarget?.left)-caclLeft}px`
+       }
+     });
+
+     window.addEventListener("scroll", (evt)=>{
+         posTarget = document.getElementById(this.target)?.getBoundingClientRect();
+         const el = document.getElementById('v-popover');
+         if(el){
+           console.log(' hello the world ', posTarget);
+           el.style.position = 'fixed';
+           el.style.top= `${Number(posTarget?.height)+Number(posTarget?.top)+10}px`
+         }
+     });
+
+      window?.addEventListener("click", (e)=>{
+        posTarget = document.getElementById(this.target)?.getBoundingClientRect();
+        if(e.target?.id === this.target){
+           this.$nextTick(() => {
+           let caclLeft = this.width - (Number(posTarget?.width));
+            this.position = {
+            top: `${Number(posTarget?.top)-10}px`,
+            left: `${Number(posTarget?.left)-caclLeft}px`
+         }
+          this.visible = !this.visible;
+           });
+        }
+        else{
+          this.visible = false;
+        }
+     });
   }
 }
 </script>
@@ -60,13 +123,13 @@ export default class Popover extends MixinsDeclaration {
   top: -9px;
   z-index: 200;
   filter: drop-shadow(0px -1px 0px rgba(0, 0, 0, 0.3));
+  left: calc(90% - 10px);
 }
 
 .vue-popover.dropdown-position-bottom:before,
 .vue-popover.dropdown-position-top:before {
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  left: calc(50% - 10px);
 }
 
 .vue-popover:before {
